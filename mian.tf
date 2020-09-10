@@ -11,6 +11,6 @@ module "vpc" {
   private_subnets = ["10.50.100.0/24", "10.50.101.0/24", "10.50.102.0/24"]
 
   enable_nat_gateway = "true"
-  one_nat_gateway_per_az = "true"
+  one_nat_gateway_per_az = "false"
   single_nat_gateway = "true"
 }
