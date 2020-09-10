@@ -1,3 +1,6 @@
+// -------
+// VPC
+// -------
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
@@ -28,11 +31,6 @@ variable "public_subnets" {
   default     = []
 }
 
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
 
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
@@ -50,4 +48,46 @@ variable "one_nat_gateway_per_az" {
   description = "Should be true if you want only one NAT Gateway per availability zone. Requires `var.azs` to be set, and the number of `public_subnets` created to be greater than or equal to the number of availability zones specified in `var.azs`."
   type        = bool
   default     = false
+}
+
+
+// -------
+// EKS
+// -------
+variable "cluster_name" {
+  description = "Name of the EKS cluster. Also used as a prefix in names of related resources."
+  type        = string
+}
+
+variable "cluster_version" {
+  description = "Kubernetes version to use for the EKS cluster."
+  type        = string
+}
+
+variable "subnets" {
+  description = "A list of subnets to place the EKS cluster and workers within."
+  type        = list(string)
+}
+
+variable "vpc_id" {
+  description = "VPC where the cluster and workers will be deployed."
+  type        = string
+}
+
+variable "worker_groups_launch_template" {
+  description = "A list of maps defining worker group configurations to be defined using AWS Launch Templates. See workers_group_defaults for valid keys."
+  type        = any
+  default     = []
+}
+
+variable "worker_ami_name_filter" {
+  description = "Name filter for AWS EKS worker AMI. If not provided, the latest official AMI for the specified 'cluster_version' is used."
+  type        = string
+  default     = ""
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 }
