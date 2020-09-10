@@ -1,16 +1,21 @@
-//----------------------------------------------------------------------------
-// Sample Configuration
-// https://github.com/hashicorp/learn-private-module-root/blob/master/main.tf
-//----------------------------------------------------------------------------
+//--------------------------------------------------------------------
+// Modules
+//--------------------------------------------------------------------
 
-provider "aws" {
-  region = var.region
-}
+module "vpc" {
+  source  = "app.terraform.io/megazonesa/vpc/aws"
+  version = "2.48.0"
 
-module "s3-webapp" {
-  source  = "app.terraform.io/hashicorp-learn/s3-webapp/aws"
-  name        = var.name
-  region = var.region
-  prefix = var.prefix
-  version = "1.0.0"
+  name = var.name
+  cidr = var.cidr
+
+  azs = var.azs
+  private_subnets = var.private_subnets
+  public_subnets = var.public_subnets
+
+  enable_nat_gateway = var.enable_nat_gateway
+  one_nat_gateway_per_az = var.one_nat_gateway_per_az
+  single_nat_gateway = var.single_nat_gateway
+
+  tags = var.tags
 }
