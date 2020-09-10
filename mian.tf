@@ -43,6 +43,5 @@ module "vpc" {
   public_subnet_assign_ipv6_address_on_creation = "${var.vpc_public_subnet_assign_ipv6_address_on_creation}"
   redshift_subnet_assign_ipv6_address_on_creation = "${var.vpc_redshift_subnet_assign_ipv6_address_on_creation}"
   single_nat_gateway = "true"
-  tags = { Terraform = "true" Environment = "dev" }
   vpn_gateway_az = "${var.vpc_vpn_gateway_az}"
 }
