@@ -1,17 +1,21 @@
 //--------------------------------------------------------------------
 // Modules
+//--------------------------------------------------------------------
+
 module "vpc" {
   source  = "app.terraform.io/megazonesa/vpc/aws"
   version = "2.48.0"
 
-  name = "today-vpc"
-  cidr = "10.50.0.0/16"
+  name = var.name
+  cidr = var.cidr
 
-  azs = ["ap-northeast-2a", "ap-northeast-2c"]
-  private_subnets = ["10.50.100.0/24", "10.50.101.0/24"]
-  public_subnets = ["10.50.1.0/24", "10.50.2.0/24"]
+  azs = var.azs
+  private_subnets = var.private_subnets
+  public_subnets = var.public_subnets
 
-  enable_nat_gateway = "true"
-  one_nat_gateway_per_az = "false"
-  single_nat_gateway = "true"
+  enable_nat_gateway = var.enable_nat_gateway
+  one_nat_gateway_per_az = var.one_nat_gateway_per_az
+  single_nat_gateway = var.single_nat_gateway
+
+  tags = var.tags
 }
