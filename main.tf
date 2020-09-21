@@ -50,9 +50,7 @@ module "s3_bucket" {
 
   tags = var.tags
 
-  versioning = {
-    enabled = var.versioning
-  }
+  versioning = var.versioning
 
   // S3 bucket-level Public Access Block configuration
   block_public_acls       = true
