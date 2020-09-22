@@ -8,7 +8,7 @@
 module "vpc" {
   source = "app.terraform.io/megazonesa/vpc/aws"
   version = "2.48.0"
-
+  
   database_subnets    =  var.database_subnets
 
   create_database_subnet_group           = true

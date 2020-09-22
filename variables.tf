@@ -25,12 +25,6 @@ variable "create_database_subnet_route_table" {
   default     = false
 }
 
-variable "database_subnet_tags" {
-  description = "Additional tags for the database subnets"
-  type        = map(string)
-  default     = {}
-}
-
 // -------
 // RDS
 // -------
