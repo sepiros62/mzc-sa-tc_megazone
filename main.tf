@@ -54,6 +54,7 @@ module "db" {
   # disable backups to create DB faster
   backup_retention_period = "7"
   backup_window           = "03:00-06:00"
+  maintenance_window = "Mon:00:00-Mon:03:00"
   auto_minor_version_upgrade = var.auto_minor_version_upgrade
 
   tags = var.tags
