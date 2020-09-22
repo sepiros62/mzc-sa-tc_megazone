@@ -10,11 +10,10 @@ module "vpc" {
   source  = "app.terraform.io/megazonesa/vpc/aws"
   version = "2.48.0"
 
-  name = var.name
-  cidr = var.cidr
-
-  azs = var.azs
-
+  # vpc
+  name                 = var.name
+  cidr                 = var.cidr
+  azs                  = var.azs
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -27,6 +26,9 @@ module "vpc" {
   enable_nat_gateway     = var.enable_nat_gateway
   single_nat_gateway     = var.single_nat_gateway
   one_nat_gateway_per_az = var.one_nat_gateway_per_az
+
+  # RDS
+  create_database_subnet_group = false
 
   # tag
   tags                 = var.tags
