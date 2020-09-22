@@ -27,7 +27,7 @@ variable "multi_az" {
   default     = false
 }
 
-variable "db_name" {
+variable "name" {
   description = "The DB name to create. If omitted, no database is created initially"
   type        = string
   default     = ""

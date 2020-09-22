@@ -6,7 +6,9 @@
 # Data sources 
 ###############
 data "aws_vpc" "default" {
-  default = true
+  tags = {
+    Terraform = "true"
+  }
 }
 
 data "aws_subnet_ids" "all" {
