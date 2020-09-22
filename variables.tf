@@ -60,12 +60,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "vpc_tags" {
-  description = "Additional tags for the VPC"
-  type        = map(string)
-  default     = {}
-}
-
 variable "database_subnet_tags" {
   description = "Additional tags for the database subnets"
   type        = map(string)
