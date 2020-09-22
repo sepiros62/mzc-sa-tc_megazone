@@ -11,8 +11,10 @@ module "vpc" {
 
   azs = var.azs
 
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
   # subnet
-  database_subnets = var.database_subnets
   private_subnets = var.private_subnets
   public_subnets = var.public_subnets
 
@@ -23,7 +25,6 @@ module "vpc" {
    
   # tag
   tags = var.tags
-  database_subnet_tags = var.database_subnet_tags
   public_subnet_tags = var.public_subnet_tags
   private_subnet_tags = var.private_subnet_tags
 }

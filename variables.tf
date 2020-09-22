@@ -28,12 +28,6 @@ variable "public_subnets" {
   default     = []
 }
 
-variable "database_subnets" {
-  description = "A list of database subnets"
-  type        = list(string)
-  default     = []
-}
-
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
@@ -56,12 +50,6 @@ variable "one_nat_gateway_per_az" {
 # tags
 variable "tags" {
   description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
-
-variable "database_subnet_tags" {
-  description = "Additional tags for the database subnets"
   type        = map(string)
   default     = {}
 }
