@@ -13,8 +13,6 @@ module "vpc" {
 
   create_database_subnet_group           = true
   create_database_subnet_route_table     = true
-
-  database_subnet_group_tags = var.database_subnet_group_tags
 }
 
 
