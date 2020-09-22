@@ -19,17 +19,18 @@ module "vpc" {
   enable_dns_support   = true
 
   # subnet
-  private_subnets = var.private_subnets
-  public_subnets = var.public_subnets
+  private_subnets  = var.private_subnets
+  public_subnets   = var.public_subnets
   database_subnets = var.database_subnets
 
   # gateway
-  enable_nat_gateway = var.enable_nat_gateway
-  single_nat_gateway = var.single_nat_gateway
+  enable_nat_gateway     = var.enable_nat_gateway
+  single_nat_gateway     = var.single_nat_gateway
   one_nat_gateway_per_az = var.one_nat_gateway_per_az
-   
+
   # tag
-  tags = var.tags
-  public_subnet_tags = var.public_subnet_tags
-  private_subnet_tags = var.private_subnet_tags
+  tags                 = var.tags
+  public_subnet_tags   = var.public_subnet_tags
+  private_subnet_tags  = var.private_subnet_tags
+  database_subnet_tags = var.database_subnet_tags
 }
