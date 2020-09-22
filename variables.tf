@@ -1,7 +1,39 @@
 // -------
-// S3 Bucket
+// VPC
 // -------
+variable "create_vpc" {
+  description = "Controls if VPC should be created (it affects almost all resources)"
+  type        = bool
+  default     = false
+}
 
+variable "name" {
+  description = "Name to be used on all the resources as identifier"
+  type        = string
+  default     = ""
+}
+
+variable "database_subnets" {
+  description = "A list of database subnets"
+  type        = list(string)
+  default     = []
+}
+
+variable "create_database_subnet_route_table" {
+  description = "Controls if separate route table for database should be created"
+  type        = bool
+  default     = false
+}
+
+variable "database_subnet_tags" {
+  description = "Additional tags for the database subnets"
+  type        = map(string)
+  default     = {}
+}
+
+// -------
+// RDS
+// -------
 variable "identifier" {
   description = "The name of the RDS instance, if omitted, Terraform will assign a random, unique identifier"
   type        = string
@@ -28,7 +60,7 @@ variable "multi_az" {
   default     = false
 }
 
-variable "name" {
+variable "db_name" {
   description = "The DB name to create. If omitted, no database is created initially"
   type        = string
   default     = ""

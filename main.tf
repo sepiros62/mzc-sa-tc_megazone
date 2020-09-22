@@ -2,21 +2,21 @@
 // Modules
 //--------------------------------------------------------------------
 
-##############################################################
-# Data sources to get VPC, subnets and security group details
-##############################################################
-data "aws_vpc" "default" {
-  tags = { Terraform = "true" }
+######
+# VPC
+######
+module "vpc" {
+  source = "app.terraform.io/megazonesa/vpc/aws"
+  version = "2.48.0"
+
+  database_subnets    =  var.database_subnets
+
+  create_database_subnet_group           = true
+  create_database_subnet_route_table     = true
+
+  database_subnet_group_tags = var.database_subnet_group_tags
 }
 
-data "aws_subnet_ids" "all" {
-  vpc_id = data.aws_vpc.default.id
-}
-
-data "aws_security_group" "default" {
-  vpc_id = data.aws_vpc.default.id
-  name   = "default"
-}
 
 #####
 # DB
@@ -49,7 +49,8 @@ module "db" {
   tags = var.tags
 
   # DB subnet group
-  subnet_ids = data.aws_subnet_ids.all.ids
+  #subnet_ids =  data.aws_subnet_ids.all.ids
+  subnet_ids =  module.vpc.aws_subnet_ids.all.ids
 
   # DB parameter group
   family = var.family
