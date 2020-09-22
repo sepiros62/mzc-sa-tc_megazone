@@ -49,6 +49,11 @@ variable "tags" {
   default     = {}
 }
 
+variable "auto_minor_version_upgrade" {
+  description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
+  type        = bool
+  default     = false
+}
 
 # DB parameter group
 variable "family" {
