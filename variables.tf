@@ -55,6 +55,11 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
+variable "create_database_subnet_group" {
+  description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)"
+  type        = bool
+  default     = false
+}
 
 # tags
 variable "tags" {
