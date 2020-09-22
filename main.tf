@@ -13,8 +13,9 @@ data "aws_vpc" "default" {
 
 data "aws_subnet_ids" "all" {
   vpc_id = data.aws_vpc.default.id
+
   tags = {
-    RDS = "true"
+    RDS       = "true"
     Terraform = "true"
   }
 }
@@ -24,18 +25,19 @@ data "aws_security_group" "default" {
   name   = "default"
 }
 
+
 #####
 # DB
 #####
 module "db" {
-  source = "app.terraform.io/megazonesa/rds/aws"
+  source  = "app.terraform.io/megazonesa/rds/aws"
   version = "~> 2.0"
 
   identifier = var.identifier
 
   # All available versions: http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.VersionMgmt
   engine            = "mysql"
-  engine_version    = var.engin_version
+  engine_version    = var.engine_version
   instance_class    = var.instance_class
   allocated_storage = var.allocated_storage
   storage_encrypted = false
@@ -47,17 +49,17 @@ module "db" {
 
   vpc_security_group_ids = [data.aws_security_group.default.id]
 
-  multi_az = var.maulti_az
+  multi_az = var.multi_az
 
   # disable backups to create DB faster
   backup_retention_period = "7"
-  maintenance_window = "Mon:00:00-Mon:03:00"
-  backup_window      = "03:00-06:00"
+  maintenance_window      = "Mon:00:00-Mon:03:00"
+  backup_window           = "03:00-06:00"
 
   tags = var.tags
 
   # DB subnet group
-  subnet_ids =  data.aws_subnet_ids.all.ids
+  subnet_ids = data.aws_subnet_ids.all.ids
 
   # DB parameter group
   family = var.family
