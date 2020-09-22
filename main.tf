@@ -13,6 +13,10 @@ data "aws_vpc" "default" {
 
 data "aws_subnet_ids" "all" {
   vpc_id = data.aws_vpc.default.id
+  tags = {
+    RDS = "true"
+    Terraform = "true"
+  }
 }
 
 data "aws_security_group" "default" {
@@ -53,8 +57,7 @@ module "db" {
   tags = var.tags
 
   # DB subnet group
-  #subnet_ids =  data.aws_subnet_ids.all.ids
-  subnet_ids =  module.vpc.aws_subnet_ids.all.ids
+  subnet_ids =  data.aws_subnet_ids.all.ids
 
   # DB parameter group
   family = var.family
