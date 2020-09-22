@@ -1,3 +1,6 @@
+/////////
+/// VPC
+/////////
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
@@ -12,6 +15,12 @@ variable "cidr" {
 
 variable "azs" {
   description = "A list of availability zones names or ids in the region"
+  type        = list(string)
+  default     = []
+}
+
+variable "database_subnets" {
+  description = "A list of database subnets"
   type        = list(string)
   default     = []
 }

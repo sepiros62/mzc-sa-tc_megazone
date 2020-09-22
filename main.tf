@@ -2,6 +2,10 @@
 // Modules
 //--------------------------------------------------------------------
 
+######
+# VPC
+######
+
 module "vpc" {
   source  = "app.terraform.io/megazonesa/vpc/aws"
   version = "2.48.0"
@@ -17,6 +21,7 @@ module "vpc" {
   # subnet
   private_subnets = var.private_subnets
   public_subnets = var.public_subnets
+  database_subnets = var.database_subnets
 
   # gateway
   enable_nat_gateway = var.enable_nat_gateway
