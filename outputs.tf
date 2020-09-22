@@ -1,21 +1,21 @@
 output "vpc_id" {
   description = "The ID of the VPC"
-  value       = concat(aws_vpc.this.*.id, [""])[0]
+  value       = module.vpc.id
 }
 
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
-  value       = concat(aws_vpc.this.*.cidr_block, [""])[0]
+  value       = module.vpc.cidr_block
 }
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = aws_subnet.private.*.id
+  value       = module.vpc.private.*.id
 }
 
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
-  value       = aws_subnet.private.*.cidr_block
+  value       = module.vpc.private.*.cidr_block
 }
 
 output "public_subnets" {
