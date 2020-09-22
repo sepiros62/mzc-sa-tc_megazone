@@ -28,6 +28,12 @@ variable "public_subnets" {
   default     = []
 }
 
+variable "database_subnets" {
+  description = "A list of database subnets"
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
