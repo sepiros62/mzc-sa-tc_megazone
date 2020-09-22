@@ -2,61 +2,92 @@
 // Modules
 //--------------------------------------------------------------------
 
-resource "aws_iam_role" "this" {
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+##############################################################
+# Data sources to get VPC, subnets and security group details
+##############################################################
+data "aws_vpc" "default" {
+  tags = { Terraform = "true" }
 }
 
-data "aws_iam_policy_document" "bucket_policy" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = [aws_iam_role.this.arn]
-    }
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${var.bucket}",
-    ]
-  }
+data "aws_subnet_ids" "all" {
+  vpc_id = data.aws_vpc.default.id
 }
 
-module "s3_bucket" {
-  source = "app.terraform.io/megazonesa/s3-bucket/aws"
-  version = "1.12.0"
+data "aws_security_group" "default" {
+  vpc_id = data.aws_vpc.default.id
+  name   = "default"
+}
 
-  bucket        = var.bucket
-  acl           = "private"
-  force_destroy = true
+#####
+# DB
+#####
+module "db" {
+  source = "app.terraform.io/megazonesa/rds/aws"
+  version = "~> 2.0"
 
-  attach_policy = true
-  policy        = data.aws_iam_policy_document.bucket_policy.json
+  identifier = var.identifier
+
+  # All available versions: http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.VersionMgmt
+  engine            = "mysql"
+  engine_version    = var.engin_version
+  instance_class    = var.instance_class
+  allocated_storage = var.allocated_storage
+  storage_encrypted = false
+
+  name     = var.name
+  username = var.username
+  password = var.password
+  port     = "3306"
+
+  vpc_security_group_ids = [data.aws_security_group.default.id]
+
+  multi_az = var.maulti_az
+
+  # disable backups to create DB faster
+  backup_retention_period = "7"
 
   tags = var.tags
 
-  versioning = {
-    enabled = var.versioning
-  }
+  # DB subnet group
+  subnet_ids = data.aws_subnet_ids.all.ids
 
-  // S3 bucket-level Public Access Block configuration
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  # DB parameter group
+  family = var.family
+
+  # DB option group
+  major_engine_version = var.major_engine_version
+
+  # Snapshot name upon DB deletion
+  final_snapshot_identifier = var.final_snapshot_identifier
+
+  # Database Deletion Protection
+  deletion_protection = var.deletion_protection
+
+  parameters = [
+    {
+      name  = "character_set_client"
+      value = "utf8"
+    },
+    {
+      name  = "character_set_server"
+      value = "utf8"
+    }
+  ]
+
+  options = [
+    {
+      option_name = "MARIADB_AUDIT_PLUGIN"
+
+      option_settings = [
+        {
+          name  = "SERVER_AUDIT_EVENTS"
+          value = "CONNECT"
+        },
+        {
+          name  = "SERVER_AUDIT_FILE_ROTATIONS"
+          value = "37"
+        },
+      ]
+    },
+  ]
 }
