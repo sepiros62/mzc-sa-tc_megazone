@@ -2,6 +2,12 @@
 // Modules
 //--------------------------------------------------------------------
 
+data "aws_vpc" "selected" {
+  tags = {
+    Terraform = "true"
+  }
+}
+
 ######
 # VPC
 ######
@@ -9,6 +15,8 @@ module "vpc" {
   source = "app.terraform.io/megazonesa/vpc/aws"
   version = "2.48.0"
   
+  vpc_id	= data.aws_vpc.selected.id
+  cidr		= data.aws_vpc.selected.cidr_block
   database_subnets    =  var.database_subnets
 
   create_database_subnet_group           = true
