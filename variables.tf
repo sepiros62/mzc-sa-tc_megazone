@@ -52,8 +52,16 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
+
+# tags
 variable "tags" {
   description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "vpc_tags" {
+  description = "Additional tags for the VPC"
   type        = map(string)
   default     = {}
 }
