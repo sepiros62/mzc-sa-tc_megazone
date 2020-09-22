@@ -13,6 +13,12 @@ variable "name" {
   default     = ""
 }
 
+variable "azs" {
+  description = "A list of availability zones names or ids in the region"
+  type        = list(string)
+  default     = []
+}
+
 variable "database_subnets" {
   description = "A list of database subnets"
   type        = list(string)
