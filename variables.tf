@@ -44,12 +44,6 @@ variable "database_name" {
   default     = ""
 }
 
-variable "final_snapshot_identifier" {
-  description = "The name of your final DB snapshot when this DB instance is deleted."
-  type        = string
-  default     = null
-}
-
 variable "auto_minor_version_upgrade" {
   description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
   type        = bool

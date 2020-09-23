@@ -60,8 +60,6 @@ module "aurora" {
   # Aurora Additional configuration
   database_name                = var.database_name
   backup_retention_period      = "7"
-  backup_window                = "03:00-06:00"
-  final_snapshot_identifier    = var.final_snapshot_identifier
   auto_minor_version_upgrade   = var.auto_minor_version_upgrade
   storage_encrypted            = false
   performance_insights_enabled = false
