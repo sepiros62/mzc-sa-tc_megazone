@@ -84,5 +84,5 @@ resource "aws_db_parameter_group" "aurora_db_parameter_group" {
 
 resource "aws_rds_cluster_parameter_group" "aurora_cluster_parameter_group" {
   name   = var.pg_name
-  family = var.family
+  family = var.pg_family
 }

@@ -67,3 +67,15 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "pg_name" {
+  description = "Name for an aurora parameter group name"
+  type        = string
+  default     = ""
+}
+
+variable "pg_family" {
+  description = "Name for an aurora cluster parameter group name"
+  type        = string
+  default     = ""
+}
