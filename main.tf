@@ -2,61 +2,87 @@
 // Modules
 //--------------------------------------------------------------------
 
-resource "aws_iam_role" "this" {
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
-
-data "aws_iam_policy_document" "bucket_policy" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = [aws_iam_role.this.arn]
-    }
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${var.bucket}",
-    ]
+###############
+# Data sources 
+###############
+data "aws_vpc" "default" {
+  tags = {
+    Terraform = "true"
   }
 }
 
-module "s3_bucket" {
-  source = "app.terraform.io/megazonesa/s3-bucket/aws"
-  version = "1.12.0"
+data "aws_subnet_ids" "all" {
+  vpc_id = data.aws_vpc.default.id
 
-  bucket        = var.bucket
-  acl           = "private"
-  force_destroy = true
+  tags = {
+    RDS       = "true"
+    Terraform = "true"
+  }
+}
 
-  attach_policy = true
-  policy        = data.aws_iam_policy_document.bucket_policy.json
+data "aws_security_group" "default" {
+  vpc_id = data.aws_vpc.default.id
+  name   = "default"
+}
 
+
+#############
+# RDS Aurora
+#############
+module "aurora" {
+  source  = "app.terraform.io/megazonesa/rds-aurora/aws"
+  version = "~> 2.0"
+
+  # Aurora Engine Option
+  engine         = var.engine
+  engine_mode    = "provisioned"
+  engine_version = var.engine_version
+
+  # Aurora Settings
+  name     = var.name
+  username = var.username
+  password = var.password
+
+  # Aurora DB Instance size
+  instance_type = var.instance_type
+
+  # Aurora Availability & durability
+  replica_count = var.replica_count
+
+  # Aurora Connectivity
+  vpc_id                 = data.aws_vpc.default.id
+  subnets                = data.aws_subnet_ids.all.ids
+  vpc_security_group_ids = [data.aws_security_group.default.id]
+
+  # Aurora DB authentication
+  iam_database_authentication_enabled = false
+
+  # Aurora Additional configuration
+  database_name                = var.database_name
+  backup_retention_period      = "7"
+  backup_window                = "03:00-06:00"
+  final_snapshot_identifier    = var.final_snapshot_identifier
+  auto_minor_version_upgrade   = var.auto_minor_version_upgrade
+  storage_encrypted            = false
+  performance_insights_enabled = false
+
+  db_parameter_group_name         = aws_db_parameter_group.aurora_db_parameter_group.id
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_parameter_group.id
+
+  # Aurora Tags
   tags = var.tags
+}
 
-  versioning = {
-    enabled = var.versioning
-  }
+#############################
+# Aurora Parameter Group
+#############################
+resource "aws_db_parameter_group" "aurora_db_parameter_group" {
+  name        = var.pg_name
+  family      = var.pg_family
+  description = "test-aurora-db-57-parameter-group"
+}
 
-  // S3 bucket-level Public Access Block configuration
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+resource "aws_rds_cluster_parameter_group" "aurora_cluster_parameter_group" {
+  name   = var.pg_name
+  family = var.family
 }
