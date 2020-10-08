@@ -20,6 +20,12 @@ variable "path" {
   default     = "/"
 }
 
+variable "name_prefix" {
+  description = "The resource name prefix and Name tag of the load balancer. Cannot be longer than 6 characters"
+  type        = string
+  default     = null
+}
+
 variable "healthy_threshold" {
   description = ""
   type        = string
