@@ -78,3 +78,4 @@ module "alb" {
   tags = var.tags
   lb_tags = var.lb_tags
   target_group_tags = var.target_group_tags
+}
