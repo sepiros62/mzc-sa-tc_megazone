@@ -20,18 +20,6 @@ variable "target_groups" {
   default     = []
 }
 
-variable "load_balancer_update_timeout" {
-  description = "Timeout value when updating the ALB."
-  type        = string
-  default     = "10m"
-}
-
-variable "load_balancer_update_timeout" {
-  description = "Timeout value when updating the ALB."
-  type        = string
-  default     = "10m"
-}
-
 variable "path" {
   description = ""
   type        = string

@@ -70,7 +70,7 @@ module "alb" {
         unhealthy_threshold = var.unhealthy_threshold
         timeout             = var.timeout
         protocol            = "HTTP"
-        matcher             =  var.matcher
+        matcher             = var.matcher
       }
     }
   ]
