@@ -2,9 +2,9 @@
 // Modules
 //--------------------------------------------------------------------
 
-###############
-# Data sources 
-###############
+##################################################################
+# Data sources to get VPC and subnets
+##################################################################
 data "aws_vpc" "default" {
   tags = {
     Terraform = "true"
@@ -15,7 +15,7 @@ data "aws_subnet_ids" "all" {
   vpc_id = data.aws_vpc.default.id
 
   tags = {
-    RDS       = "true"
+    Tier      = "public"
     Terraform = "true"
   }
 }
@@ -26,79 +26,55 @@ data "aws_security_group" "default" {
 }
 
 
-#####
-# DB
-#####
-module "db" {
-  source  = "app.terraform.io/megazonesa/rds/aws"
-  version = "~> 2.0"
+##################################################################
+# Application Load Balancer
+##################################################################
 
-  identifier = var.identifier
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 5.0"
 
-  # All available versions: http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.VersionMgmt
-  engine            = "mysql"
-  engine_version    = var.engine_version
-  instance_class    = var.instance_class
-  allocated_storage = var.allocated_storage
-  storage_encrypted = false
+  name = var.name
+  
+  load_balancer_type = "application"
 
-  name     = var.name
-  username = var.username
-  password = var.password
-  port     = "3306"
+  vpc_id             = data.aws_vpc.default.id
+  subnets            = data.aws_subnet_ids.all.ids
+  security_groups    = [data.aws_security_group.default.id]
 
-  vpc_security_group_ids = [data.aws_security_group.default.id]
+  # access_logs = {
+  #   bucket = "my-alb-logs"
+  # }
 
-  multi_az = var.multi_az
-
-  # disable backups to create DB faster
-  backup_retention_period = "7"
-  backup_window           = "03:00-06:00"
-  maintenance_window = "Mon:00:00-Mon:03:00"
-  auto_minor_version_upgrade = var.auto_minor_version_upgrade
-
-  tags = var.tags
-
-  # DB subnet group
-  subnet_ids = data.aws_subnet_ids.all.ids
-
-  # DB parameter group
-  family = var.family
-
-  # DB option group
-  major_engine_version = var.major_engine_version
-
-  # Snapshot name upon DB deletion
-  final_snapshot_identifier = var.final_snapshot_identifier
-
-  # Database Deletion Protection
-  deletion_protection = var.deletion_protection
-
-  parameters = [
+  http_tcp_listeners = [
     {
-      name  = "character_set_client"
-      value = "utf8"
-    },
-    {
-      name  = "character_set_server"
-      value = "utf8"
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
     }
   ]
 
-  options = [
+  target_groups = [
     {
-      option_name = "MARIADB_AUDIT_PLUGIN"
-
-      option_settings = [
-        {
-          name  = "SERVER_AUDIT_EVENTS"
-          value = "CONNECT"
-        },
-        {
-          name  = "SERVER_AUDIT_FILE_ROTATIONS"
-          value = "37"
-        },
-      ]
-    },
+      name_prefix          = "${var.name}-tg"
+      backend_protocol     = "HTTP"
+      backend_port         = 80
+      target_type          = "instance"
+      deregistration_delay = 10
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = var.health_path
+        port                = "traffic-port"
+        healthy_threshold   = var.healthy_threshold
+        unhealthy_threshold = var.unhealthy_threshold
+        timeout             = var.timeout
+        protocol            = "HTTP"
+        matcher             =  var.matcher
+      }
+    }
   ]
-}
+
+  tags = var.tags
+  lb_tags = var.lb_tags
+  target_group_tags = var.target_group_tags

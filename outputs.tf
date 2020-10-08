@@ -1,75 +1,59 @@
-output "this_db_instance_address" {
-  description = "The address of the RDS instance"
-  value       = module.db.this_db_instance_address
+output "this_lb_id" {
+  description = "The ID and ARN of the load balancer we created."
+  value       = module.alb.this_lb_id
 }
 
-output "this_db_instance_arn" {
-  description = "The ARN of the RDS instance"
-  value       = module.db.this_db_instance_arn
+output "this_lb_arn" {
+  description = "The ID and ARN of the load balancer we created."
+  value       = module.alb.this_lb_arn
 }
 
-output "this_db_instance_availability_zone" {
-  description = "The availability zone of the RDS instance"
-  value       = module.db.this_db_instance_availability_zone
+output "this_lb_dns_name" {
+  description = "The DNS name of the load balancer."
+  value       = module.alb.this_lb_dns_name
 }
 
-output "this_db_instance_endpoint" {
-  description = "The connection endpoint"
-  value       = module.db.this_db_instance_endpoint
+output "this_lb_arn_suffix" {
+  description = "ARN suffix of our load balancer - can be used with CloudWatch."
+  value       = module.alb.this_lb_arn_suffix
 }
 
-output "this_db_instance_hosted_zone_id" {
-  description = "The canonical hosted zone ID of the DB instance (to be used in a Route 53 Alias record)"
-  value       = module.db.this_db_instance_hosted_zone_id
+output "this_lb_zone_id" {
+  description = "The zone_id of the load balancer to assist with creating DNS records."
+  value       = module.alb.this_lb_zone_id
 }
 
-output "this_db_instance_id" {
-  description = "The RDS instance ID"
-  value       = module.db.this_db_instance_id
+output "http_tcp_listener_arns" {
+  description = "The ARN of the TCP and HTTP load balancer listeners created."
+  value       = module.alb.http_tcp_listener_arns
 }
 
-output "this_db_instance_resource_id" {
-  description = "The RDS Resource ID of this instance"
-  value       = module.db.this_db_instance_resource_id
+output "http_tcp_listener_ids" {
+  description = "The IDs of the TCP and HTTP load balancer listeners created."
+  value       = module.alb.http_tcp_listener_ids
 }
 
-output "this_db_instance_status" {
-  description = "The RDS instance status"
-  value       = module.db.this_db_instance_status
+output "https_listener_arns" {
+  description = "The ARNs of the HTTPS load balancer listeners created."
+  value       = module.alb.https_listener_arns
 }
 
-output "this_db_instance_name" {
-  description = "The database name"
-  value       = module.db.this_db_instance_name
+output "https_listener_ids" {
+  description = "The IDs of the load balancer listeners created."
+  value       = module.alb.https_listener_ids
 }
 
-output "this_db_instance_username" {
-  description = "The master username for the database"
-  value       = module.db.this_db_instance_username
+output "target_group_arns" {
+  description = "ARNs of the target groups. Useful for passing to your Auto Scaling group."
+  value       = module.alb.target_group_arns
 }
 
-
-output "this_db_instance_port" {
-  description = "The database port"
-  value       = module.db.this_db_instance_port
+output "target_group_arn_suffixes" {
+  description = "ARN suffixes of our target groups - can be used with CloudWatch."
+  value       = module.alb.target_group_arn_suffixes
 }
 
-output "this_db_subnet_group_id" {
-  description = "The db subnet group name"
-  value       = module.db.this_db_subnet_group_id
-}
-
-output "this_db_subnet_group_arn" {
-  description = "The ARN of the db subnet group"
-  value       = module.db.this_db_subnet_group_arn
-}
-
-output "this_db_parameter_group_id" {
-  description = "The db parameter group id"
-  value       = module.db.this_db_parameter_group_id
-}
-
-output "this_db_parameter_group_arn" {
-  description = "The ARN of the db parameter group"
-  value       = module.db.this_db_parameter_group_arn
+output "target_group_names" {
+  description = "Name of the target group. Useful for passing to your CodeDeploy Deployment Group."
+  value       = module.alb.target_group_names
 }
