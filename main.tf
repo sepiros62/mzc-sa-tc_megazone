@@ -71,6 +71,9 @@ module "security_group" {
 resource "aws_eip" "this" {
   vpc      = true
   instance = module.ec2_cluster.id[0]
+  tags = {
+    Name = "${var.name}-eip"
+  }
 }
 
 module "ec2_cluster" {
@@ -79,10 +82,11 @@ module "ec2_cluster" {
 
   instance_count = 1
 
-  name          = var.name
-  ami           = data.aws_ami.amazon_linux.id
-  instance_type = var.instance_type
-  subnet_id     = tolist(data.aws_subnet_ids.all.ids)[0]
+  name                        = var.name
+  key_name                    = var.key_name
+  ami                         = data.aws_ami.amazon_linux.id
+  instance_type               = var.instance_type
+  subnet_id                   = tolist(data.aws_subnet_ids.all.ids)[0]
   vpc_security_group_ids      = [module.security_group.this_security_group_id]
   associate_public_ip_address = true
 
@@ -95,5 +99,6 @@ module "ec2_cluster" {
     },
   ]
 
-  tags = var.tags
+  tags        = var.tags
+  volume_tags = var.volume_tags
 }
