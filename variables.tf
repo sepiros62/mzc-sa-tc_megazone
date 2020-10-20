@@ -11,6 +11,12 @@ variable "instance_type" {
   type        = string
 }
 
+variable "key_name" {
+  description = "The key name to use for the instance"
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "A mapping of tags to assign to all resources"
   type        = map(string)
