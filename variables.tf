@@ -1,39 +1,20 @@
 // -------
-// EC2
+// ACM
 // -------
-variable "name" {
-  description = "Name to be used on all resources as prefix"
-  type        = string
-}
-
-variable "instance_type" {
-  description = "The type of instance to start"
-  type        = string
-}
-
-variable "key_name" {
-  description = "The key name to use for the instance"
+variable "domain" {
+  description = "A domain name for which the certificate should be issued"
   type        = string
   default     = ""
+}
+
+variable "subject_alternative_names" {
+  description = "A list of domains that should be SANs in the issued certificate"
+  type        = list(string)
+  default     = []
 }
 
 variable "tags" {
   description = "A mapping of tags to assign to all resources"
   type        = map(string)
   default     = {}
-}
-
-variable "volume_tags" {
-  description = "A mapping of tags to assign to the devices created by the instance at launch time"
-  type        = map(string)
-  default     = {}
-}
-
-// -----------------
-// Security Group
-// -----------------
-variable "ingress_cidr_blocks" {
-  description = "List of IPv4 CIDR ranges to use on all ingress rules"
-  type        = list(string)
-  default     = []
 }

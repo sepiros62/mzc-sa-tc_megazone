@@ -1,49 +1,29 @@
-output "ids" {
-  description = "List of IDs of instances"
-  value       = module.ec2_cluster.id
+output "this_acm_certificate_arn" {
+  description = "The ARN of the certificate"
+  value       = module.acm.this_acm_certificate_arn
 }
 
-output "public_dns" {
-  description = "List of public DNS names assigned to the instances"
-  value       = module.ec2_cluster.public_dns
+output "this_acm_certificate_domain_validation_options" {
+  description = "A list of attributes to feed into other resources to complete certificate validation. Can have more than one element, e.g. if SANs are defined. Only set if DNS-validation was used."
+  value       = module.acm.this_acm_certificate_domain_validation_options
 }
 
-output "vpc_security_group_ids" {
-  description = "List of VPC security group ids assigned to the instances"
-  value       = module.ec2_cluster.vpc_security_group_ids
+output "this_acm_certificate_validation_emails" {
+  description = "A list of addresses that received a validation E-Mail. Only set if EMAIL-validation was used."
+  value       = module.acm.this_acm_certificate_validation_emails
 }
 
-output "root_block_device_volume_ids" {
-  description = "List of volume IDs of root block devices of instances"
-  value       = module.ec2_cluster.root_block_device_volume_ids
+output "validation_route53_record_fqdns" {
+  description = "List of FQDNs built using the zone domain and name."
+  value       = module.acm.validation_route53_record_fqdns
 }
 
-output "ebs_block_device_volume_ids" {
-  description = "List of volume IDs of EBS block devices of instances"
-  value       = module.ec2_cluster.ebs_block_device_volume_ids
+output "distinct_domain_names" {
+  description = "List of distinct domains names used for the validation."
+  value       = module.acm.distinct_domain_names
 }
 
-output "tags" {
-  description = "List of tags"
-  value       = module.ec2_cluster.tags
-}
-
-output "placement_group" {
-  description = "List of placement group"
-  value       = module.ec2_cluster.placement_group
-}
-
-output "instance_id" {
-  description = "ec2_cluster instance ID"
-  value       = module.ec2_cluster.id[0]
-}
-
-output "instance_public_dns" {
-  description = "Public DNS name assigned to the ec2_cluster instance"
-  value       = module.ec2_cluster.public_dns[0]
-}
-
-output "credit_specification" {
-  description = "Credit specification of ec2_cluster instance (empty list for not t2 instance types)"
-  value       = module.ec2_cluster.credit_specification
+output "validation_domains" {
+  description = "List of distinct domain validation options. This is useful if subject alternative names contain wildcards."
+  value       = module.acm.validation_domains
 }
