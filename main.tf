@@ -9,10 +9,9 @@ echo "Hello Terraform!"
 EOF
 }
 
-
-##################################################################
-# Data sources to get VPC, subnet, security group and AMI details
-##################################################################
+##############################################################
+# Data sources to get VPC, subnets and security group details
+##############################################################
 data "aws_vpc" "default" {
   tags = {
     Terraform = "true"
@@ -23,15 +22,19 @@ data "aws_subnet_ids" "all" {
   vpc_id = data.aws_vpc.default.id
 
   tags = {
-    Tier      = "public"
+    Tier = "private"
     Terraform = "true"
   }
 }
 
+data "aws_security_group" "default" {
+  vpc_id = data.aws_vpc.default.id
+  name   = "default"
+}
+
 data "aws_ami" "amazon_linux" {
   most_recent = true
-
-  owners = ["amazon"]
+  owners      = ["amazon"]
 
   filter {
     name = "name"
@@ -50,55 +53,67 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
+resource "aws_iam_service_linked_role" "autoscaling" {
+  aws_service_name = "autoscaling.amazonaws.com"
+  description      = "A service linked role for autoscaling"
+  custom_suffix    = "something"
 
-##################################################################
-# Bastion Host Instance (EC2)
-##################################################################
-
-module "security_group" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 3.0"
-
-  name        = "${var.name}-sg"
-  description = "Security group for example usage with EC2 instance"
-  vpc_id      = data.aws_vpc.default.id
-
-  ingress_cidr_blocks = var.ingress_cidr_blocks
-  ingress_rules       = ["ssh-tcp"]
-  egress_rules        = ["all-all"]
-}
-
-resource "aws_eip" "this" {
-  vpc      = true
-  instance = module.ec2_cluster.id[0]
-  tags = {
-    Name = "${var.name}-eip"
+  # Sometimes good sleep is required to have some IAM resources created before they can be used
+  provisioner "local-exec" {
+    command = "sleep 10"
   }
 }
 
-module "ec2_cluster" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 2.0"
+######
+# Launch configuration and autoscaling group
+######
+module "asg" {
+  source  = "app.terraform.io/megazonesa/autoscaling/aws"
+  version = "3.7.0"
 
-  instance_count = 1
+  name = var.name
+  
+# create_lc = false # disables creation of launch configuration
+  create_lc = var.create_lc
 
-  name                        = var.name
-  key_name                    = var.key_name
-  ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = var.instance_type
-  subnet_id                   = tolist(data.aws_subnet_ids.all.ids)[0]
-  vpc_security_group_ids      = [module.security_group.this_security_group_id]
-  associate_public_ip_address = true
+# Launch configuration
+  lc_name = var.lc_name
+
+  image_id                     = data.aws_ami.amazon_linux.id
+  instance_type                = var.instance_type
+  security_groups              = [data.aws_security_group.default.id]
+  associate_public_ip_address  = true
+  recreate_asg_when_lc_changes = true
 
   user_data_base64 = base64encode(local.user_data)
 
-  root_block_device = [
+  ebs_block_device = [
     {
-      volume_type = "gp2"
-      volume_size = 10
+      device_name           = "/dev/xvdz"
+      volume_type           = "gp2"
+      volume_size           = "50"
+      delete_on_termination = true
     },
   ]
 
-  tags        = var.tags
-  volume_tags = var.volume_tags
+  root_block_device = [
+    {
+      volume_size           = "50"
+      volume_type           = "gp2"
+      delete_on_termination = true
+    },
+  ]
+
+  # Auto scaling group
+  asg_name                  = var.asg_name
+  vpc_zone_identifier       = data.aws_subnet_ids.all.ids
+  health_check_type         = "EC2"
+  desired_capacity          = var.desired_capacity
+  min_size                  = var.min_size
+  max_size                  = var.max_size
+  wait_for_capacity_timeout = 0
+  service_linked_role_arn   = aws_iam_service_linked_role.autoscaling.arn
+
+  tags = var.tags
+
 }

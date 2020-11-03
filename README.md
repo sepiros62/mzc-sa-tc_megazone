@@ -1,6 +1,8 @@
-# Basic EC2 instance
+# Auto Scaling Group without ELB example
 
-Configuration in this directory creates EC2 instances with different sets of arguments (with Elastic IP, with network interface attached, with credit specifications).
+Configuration in this directory creates Launch Configuration and Auto Scaling Group.
+
+Data sources are used to discover existing VPC resources (VPC, subnet and security group) as well as AMI details.
 
 ## Usage
 
@@ -12,7 +14,7 @@ $ terraform plan
 $ terraform apply
 ```
 
-Note that this example may create resources which can cost money. Run `terraform destroy` when you don't need these resources.
+Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -33,18 +35,11 @@ No input.
 
 | Name | Description |
 |------|-------------|
-| credit\_specification | Credit specification of EC2 instance (empty list for not t2 instance types) |
-| credit\_specification\_t2\_unlimited | Credit specification of t2-type EC2 instance |
-| ebs\_block\_device\_volume\_ids | List of volume IDs of EBS block devices of instances |
-| ids | List of IDs of instances |
-| ids\_t2 | List of IDs of t2-type instances |
-| instance\_id | EC2 instance ID |
-| instance\_public\_dns | Public DNS name assigned to the EC2 instance |
-| placement\_group | List of placement group |
-| public\_dns | List of public DNS names assigned to the instances |
-| root\_block\_device\_volume\_ids | List of volume IDs of root block devices of instances |
-| t2\_instance\_id | EC2 instance ID |
-| tags | List of tags |
-| vpc\_security\_group\_ids | List of VPC security group ids assigned to the instances |
+| this\_autoscaling\_group\_availability\_zones | The availability zones of the autoscale group |
+| this\_autoscaling\_group\_id | The autoscaling group id |
+| this\_autoscaling\_group\_load\_balancers | The load balancer names associated with the autoscaling group |
+| this\_autoscaling\_group\_target\_group\_arns | List of Target Group ARNs that apply to this AutoScaling Group |
+| this\_autoscaling\_group\_vpc\_zone\_identifier | The VPC zone identifier |
+| this\_launch\_configuration\_id | The ID of the launch configuration |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

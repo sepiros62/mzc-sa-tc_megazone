@@ -1,39 +1,46 @@
 // -------
-// EC2
+// AutoScaling
 // -------
 variable "name" {
-  description = "Name to be used on all resources as prefix"
+  description = "Creates a unique name beginning with the specified prefix"
   type        = string
 }
 
-variable "instance_type" {
-  description = "The type of instance to start"
-  type        = string
-}
-
-variable "key_name" {
-  description = "The key name to use for the instance"
+variable "lc_name" {
+  description = "Creates a unique name for launch configuration beginning with the specified prefix"
   type        = string
   default     = ""
 }
 
-variable "tags" {
-  description = "A mapping of tags to assign to all resources"
-  type        = map(string)
-  default     = {}
+variable "asg_name" {
+  description = "Creates a unique name for autoscaling group beginning with the specified prefix"
+  type        = string
+  default     = ""
 }
 
-variable "volume_tags" {
-  description = "A mapping of tags to assign to the devices created by the instance at launch time"
-  type        = map(string)
-  default     = {}
+variable "create_lc" {
+  description = "Whether to create launch configuration"
+  type        = bool
+  default     = true
 }
 
-// -----------------
-// Security Group
-// -----------------
-variable "ingress_cidr_blocks" {
-  description = "List of IPv4 CIDR ranges to use on all ingress rules"
-  type        = list(string)
-  default     = []
+variable "instance_type" {
+  description = "The size of instance to launch"
+  type        = string
+  default     = ""
+}
+
+variable "desired_capacity" {
+  description = "The number of Amazon EC2 instances that should be running in the group"
+  type        = string
+}
+
+variable "min_size" {
+  description = "The minimum size of the auto scale group"
+  type        = string
+}
+
+variable "max_size" {
+  description = "The maximum size of the auto scale group"
+  type        = string
 }
