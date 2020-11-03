@@ -44,3 +44,9 @@ variable "max_size" {
   description = "The maximum size of the auto scale group"
   type        = string
 }
+
+variable "tags" {
+  description = "A list of tag blocks. Each element should have keys named key, value, and propagate_at_launch."
+  type        = list(map(string))
+  default     = []
+}
