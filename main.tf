@@ -74,7 +74,8 @@ module "asg" {
   name = var.name
 
   # create_lc = false # disables creation of launch configuration
-  create_lc = var.create_lc
+  create_lc            = var.create_lc
+  launch_configuration = var.launch_configuration
 
   # Launch configuration
   lc_name  = var.lc_name
@@ -88,7 +89,7 @@ module "asg" {
 
   user_data_base64 = base64encode(local.user_data)
 
-  ebs_block_device = var.ebs_block_device
+  ebs_block_device  = var.ebs_block_device
   root_block_device = var.root_block_device
 
   # Auto scaling group

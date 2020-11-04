@@ -45,6 +45,12 @@ variable "name" {
   type        = string
 }
 
+variable "launch_configuration" {
+  description = "The name of the launch configuration to use (if it is created outside of this module)"
+  type        = string
+  default     = ""
+}
+
 variable "asg_name" {
   description = "Creates a unique name for autoscaling group beginning with the specified prefix"
   type        = string
