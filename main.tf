@@ -29,7 +29,10 @@ data "aws_subnet_ids" "all" {
 
 data "aws_security_group" "default" {
   vpc_id = data.aws_vpc.default.id
-  name   = "default"
+
+  tags = {
+    Terraform = "true"
+  }
 }
 
 data "aws_ami" "amazon_linux" {
