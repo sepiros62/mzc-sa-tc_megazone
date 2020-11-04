@@ -1,9 +1,10 @@
 // -------
-// AutoScaling
+// Launch Configuration
 // -------
-variable "name" {
-  description = "Creates a unique name beginning with the specified prefix"
-  type        = string
+variable "create_lc" {
+  description = "Whether to create launch configuration"
+  type        = bool
+  default     = true
 }
 
 variable "lc_name" {
@@ -12,20 +13,28 @@ variable "lc_name" {
   default     = ""
 }
 
-variable "asg_name" {
-  description = "Creates a unique name for autoscaling group beginning with the specified prefix"
+variable "instance_type" {
+  description = "The size of instance to launch"
   type        = string
   default     = ""
 }
 
-variable "create_lc" {
-  description = "Whether to create launch configuration"
-  type        = bool
-  default     = true
+variable "key_name" {
+  description = "The key name that should be used for the instance"
+  type        = string
+  default     = ""
 }
 
-variable "instance_type" {
-  description = "The size of instance to launch"
+// -------
+// AutoScaling
+// -------
+variable "name" {
+  description = "Creates a unique name beginning with the specified prefix"
+  type        = string
+}
+
+variable "asg_name" {
+  description = "Creates a unique name for autoscaling group beginning with the specified prefix"
   type        = string
   default     = ""
 }
