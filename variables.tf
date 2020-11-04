@@ -25,6 +25,18 @@ variable "key_name" {
   default     = ""
 }
 
+variable "root_block_device" {
+  description = "Customize details about the root block device of the instance"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "ebs_block_device" {
+  description = "Additional EBS block devices to attach to the instance"
+  type        = list(map(string))
+  default     = []
+}
+
 // -------
 // AutoScaling
 // -------

@@ -22,7 +22,7 @@ data "aws_subnet_ids" "all" {
   vpc_id = data.aws_vpc.default.id
 
   tags = {
-    Tier = "private"
+    Tier      = "private"
     Terraform = "true"
   }
 }
@@ -72,12 +72,13 @@ module "asg" {
   version = "3.7.0"
 
   name = var.name
-  
-# create_lc = false # disables creation of launch configuration
+
+  # create_lc = false # disables creation of launch configuration
   create_lc = var.create_lc
 
-# Launch configuration
-  lc_name = var.lc_name
+  # Launch configuration
+  lc_name  = var.lc_name
+  key_name = var.key_name
 
   image_id                     = data.aws_ami.amazon_linux.id
   instance_type                = var.instance_type
@@ -87,22 +88,8 @@ module "asg" {
 
   user_data_base64 = base64encode(local.user_data)
 
-  ebs_block_device = [
-    {
-      device_name           = "/dev/xvdz"
-      volume_type           = "gp2"
-      volume_size           = "50"
-      delete_on_termination = true
-    },
-  ]
-
-  root_block_device = [
-    {
-      volume_size           = "50"
-      volume_type           = "gp2"
-      delete_on_termination = true
-    },
-  ]
+  ebs_block_device = var.ebs_block_device
+  root_block_device = var.root_block_device
 
   # Auto scaling group
   asg_name                  = var.asg_name
