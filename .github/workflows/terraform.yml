@@ -48,7 +48,6 @@ on:
   push:
     branches:
     - vpc
-  pull_request:
 
 jobs:
   terraform:
