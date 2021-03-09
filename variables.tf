@@ -103,9 +103,3 @@ variable "create_database_internet_gateway_route" {
   type        = bool
   default     = false
 }
-
-variable "create_database_subnet_group" {
-  description = "Controls if database subnet group should be created (n.b. database_subnets must also be set)"
-  type        = bool
-  default     = true
-}
