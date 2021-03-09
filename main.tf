@@ -28,7 +28,10 @@ module "vpc" {
   one_nat_gateway_per_az = var.one_nat_gateway_per_az
 
   # RDS
-  create_database_subnet_group = false
+  create_database_subnet_route_table = var.create_database_subnet_route_table
+  create_database_nat_gateway_route = var.create_database_nat_gateway_route
+  create_database_internet_gateway_route = var.create_database_internet_gateway_route
+  create_database_subnet_group = var.create_database_subnet_group
 
   # tag
   tags                 = var.tags
