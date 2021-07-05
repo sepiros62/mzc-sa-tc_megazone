@@ -7,7 +7,7 @@
 ###############
 data "aws_vpc" "default" {
   tags = {
-    Terraform = "true"
+    Environment  = "*"
   }
 }
 
@@ -15,8 +15,7 @@ data "aws_subnet_ids" "all" {
   vpc_id = data.aws_vpc.default.id
 
   tags = {
-    RDS       = "true"
-    Terraform = "true"
+    Tire       = "database"
   }
 }
 
