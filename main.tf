@@ -29,7 +29,7 @@ data "aws_security_group" "default" {
 #####
 # DB
 #####
-module "db" {
+module "rds" {
   source  = "app.terraform.io/MEGAZONE-prod/rds/aws"
   version = "1.0.0"
 
